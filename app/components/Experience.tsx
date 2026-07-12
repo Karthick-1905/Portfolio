@@ -49,21 +49,21 @@ export default function Events() {
                 </Reveal>
 
                 {/* Tab Controls */}
-                <div className="flex justify-center mb-16">
-                    <div className="flex items-center gap-1.5 bg-[#d44136]/50 p-1.5 rounded-[22px] border border-white/10 shadow-inner">
+                <div className="flex justify-center mb-16 px-4">
+                    <div className="flex items-center gap-1 md:gap-1.5 bg-[#d44136]/50 p-1 md:p-1.5 rounded-[12px] md:rounded-[22px] border border-white/10 shadow-inner">
                         {tabs.map((tab) => {
                             const isActive = activeTab === tab.value;
                             return (
                                 <button
                                     key={tab.value}
                                     onClick={() => setActiveTab(tab.value)}
-                                    className={`relative px-6 py-2.5 rounded-[16px] text-xs font-black tracking-widest uppercase transition-colors duration-300 ${isActive ? "text-[#fb5349] z-10" : "text-white/80 hover:text-white"
+                                    className={`relative px-2.5 py-1.5 md:px-6 md:py-2.5 rounded-[8px] md:rounded-[16px] text-[10px] md:text-xs font-black tracking-wider md:tracking-widest uppercase transition-colors duration-300 ${isActive ? "text-[#fb5349] z-10" : "text-white/80 hover:text-white"
                                         }`}
                                 >
                                     {isActive && (
                                         <motion.div
                                             layoutId="activeTabIndicator"
-                                            className="absolute inset-0 bg-white rounded-[16px] -z-10 shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                                            className="absolute inset-0 bg-white rounded-[8px] md:rounded-[16px] -z-10 shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                                             transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                         />
                                     )}
@@ -75,7 +75,7 @@ export default function Events() {
                 </div>
 
                 {/* Events list */}
-                <div className="max-w-5xl mx-auto flex flex-col">
+                <div className="max-w-5xl mx-auto flex flex-col px-4 md:px-8">
                     {/* Top Divider */}
                     <div className="h-px w-full bg-white/20" />
 

@@ -216,6 +216,15 @@ export default function Skills() {
     const categories = Object.keys(skills) as (keyof typeof skills)[];
     const [activeTab, setActiveTab] = useState<keyof typeof skills>(categories[0]);
     const [isHovered, setIsHovered] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
     useEffect(() => {
         if (isHovered) return;
@@ -231,7 +240,14 @@ export default function Skills() {
         return () => clearInterval(timer);
     }, [activeTab, categories, isHovered]);
 
+    // Reset expanded status whenever category tabs change
+    useEffect(() => {
+        setIsExpanded(false);
+    }, [activeTab]);
+
     const activeSkills = skills[activeTab] || [];
+    const hasMore = isMobile && activeSkills.length > 6;
+    const visibleSkills = (isMobile && !isExpanded) ? activeSkills.slice(0, 6) : activeSkills;
 
     return (
         <section
@@ -250,14 +266,14 @@ export default function Skills() {
 
                 {/* Tab Controls with Loading Width Bars */}
                 <div className="flex justify-center mb-16 px-4">
-                    <div className="flex flex-wrap justify-center items-center gap-2 bg-[#d44136]/50 p-1.5 rounded-[22px] border border-white/10 shadow-inner">
+                    <div className="flex items-center gap-1 md:gap-1.5 bg-[#d44136]/50 p-1 md:p-1.5 rounded-[12px] md:rounded-[22px] border border-white/10 shadow-inner">
                         {categories.map((category) => {
                             const isActive = activeTab === category;
                             return (
                                 <button
                                     key={category}
                                     onClick={() => setActiveTab(category)}
-                                    className={`relative px-5 py-3 rounded-[16px] text-xs font-black tracking-widest uppercase transition-colors duration-300 ${isActive ? "text-[#fb5349] z-10" : "text-white/80 hover:text-white"
+                                    className={`relative px-2.5 py-1.5 md:px-5 md:py-3 rounded-[8px] md:rounded-[16px] text-[10px] md:text-xs font-black tracking-wider md:tracking-widest uppercase transition-colors duration-300 ${isActive ? "text-[#fb5349] z-10" : "text-white/80 hover:text-white"
                                         }`}
                                     onMouseEnter={(e) => e.stopPropagation()}
                                 >
@@ -265,12 +281,12 @@ export default function Skills() {
                                         <>
                                             <motion.div
                                                 layoutId="activeSkillTabIndicator"
-                                                className="absolute inset-0 bg-white rounded-[16px] -z-10 shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                                                className="absolute inset-0 bg-white rounded-[8px] md:rounded-[16px] -z-10 shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
                                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                             />
                                             {/* Micro-loading progress bar under button */}
                                             {(!isHovered) && (
-                                                <div className="absolute bottom-1 left-4 right-4 h-0.5 bg-black/10 rounded-full overflow-hidden">
+                                                <div className="absolute bottom-1 left-2.5 right-2.5 md:left-4 md:right-4 h-0.5 bg-black/10 rounded-full overflow-hidden">
                                                     <motion.div
                                                         initial={{ width: "0%" }}
                                                         animate={{ width: "100%" }}
@@ -297,9 +313,10 @@ export default function Skills() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -15 }}
                             transition={{ duration: 0.25 }}
-                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-4"
+                            className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-4 ${hasMore && !isExpanded ? "pb-28" : ""
+                                }`}
                         >
-                            {activeSkills.map((skillName) => {
+                            {visibleSkills.map((skillName) => {
                                 const meta = techSkillsMetadata[skillName] || { description: "Skill Tech", color: "#61DAFB" };
 
                                 // Direct lookup from developer-icons or fallback to custom SVGs
@@ -348,6 +365,39 @@ export default function Skills() {
                             })}
                         </motion.div>
                     </AnimatePresence>
+
+                    {/* Gradient Fade Overlay & Trigger Button */}
+                    {hasMore && !isExpanded && (
+                        <div
+                            style={{
+                                background: "linear-gradient(to top, var(--theme-bg) 25%, transparent 100%)"
+                            }}
+                            className="absolute bottom-0 left-0 right-0 h-44 flex items-end justify-center pointer-events-none pb-4 z-20"
+                        >
+                            <button
+                                onClick={() => setIsExpanded(true)}
+                                className="pointer-events-auto group relative overflow-hidden inline-flex h-[48px] items-center bg-white rounded-[16px] shadow-[0_10px_30px_rgba(0,0,0,0.18)] border border-[var(--line)] transition-transform hover:scale-105 active:scale-95 text-[#fb5349]"
+                            >
+                                <span className="px-6 text-[11.5px] font-black uppercase tracking-[0.14em] text-[#fb5349]">
+                                    Show {activeSkills.length - 6} More
+                                </span>
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Show Less button when expanded */}
+                    {hasMore && isExpanded && (
+                        <div className="flex justify-center mt-6 z-25 relative">
+                            <button
+                                onClick={() => setIsExpanded(false)}
+                                className="group relative overflow-hidden inline-flex h-[46px] items-center bg-white rounded-[16px] border border-[var(--line)] shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-transform hover:scale-105 active:scale-95 text-[#fb5349]"
+                            >
+                                <span className="px-6 text-[11px] font-black uppercase tracking-wider">
+                                    Show Less
+                                </span>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>

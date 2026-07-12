@@ -19,7 +19,7 @@ export default function FeaturedProjects() {
                     <h2 className="mt-4 font-display text-[clamp(2.5rem,5vw,5rem)] font-black leading-[0.9] text-white">Selected Works</h2>
                 </Reveal>
 
-                <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6 md:flex-row md:items-start md:justify-center">
+                <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center justify-center gap-6 lg:flex-row lg:items-start">
                     {displayProjects.map((project, idx) => {
                         const isActive = hoveredIdx === idx;
                         return (
@@ -34,7 +34,7 @@ export default function FeaturedProjects() {
                                     backgroundColor: "#e23d2bff"
                                 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                className={`relative flex cursor-pointer flex-col rounded-[6px] p-6 pb-[92px] shadow-[0_16px_40px_rgba(200,40,30,0.15)] transition-shadow hover:shadow-[0_24px_48px_rgba(200,40,30,0.3)] ${isActive ? 'w-full md:w-[380px]' : 'w-full md:w-[320px]'}`}
+                                className={`relative flex cursor-pointer flex-col rounded-[6px] p-6 pb-[92px] shadow-[0_16px_40px_rgba(200,40,30,0.15)] transition-shadow hover:shadow-[0_24px_48px_rgba(200,40,30,0.3)] w-full max-w-[450px] lg:max-w-none ${isActive ? 'lg:w-[380px]' : 'lg:w-[320px]'}`}
                                 style={{ transformOrigin: "top" }}
                             >
                                 {/* Header: 01 and icon */}
@@ -52,7 +52,7 @@ export default function FeaturedProjects() {
                                 {/* Film-like Landscape Image Cover */}
                                 <motion.div layout className="relative w-full aspect-[16/10] shrink-0 overflow-hidden rounded-[20px] bg-white p-2.5 shadow-sm">
                                     <div className="relative h-full w-full overflow-hidden rounded-[14px]">
-                                        <Image src={project.src} alt={project.title} fill className="object-cover" />
+                                        <Image src={project.src} alt={project.title} fill className="object-cover" priority={idx === 0} sizes="(max-width: 768px) 100vw, 400px" />
                                     </div>
                                 </motion.div>
 

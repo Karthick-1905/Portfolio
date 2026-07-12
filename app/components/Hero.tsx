@@ -2,7 +2,7 @@ import { Monitor, Keyboard, MiniMouse } from "./3Dmodels";
 import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, RoundedBox, OrbitControls } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
 
 // Custom detailed models inside the diorama
@@ -221,6 +221,23 @@ function CPUCabinet({ position, rotation }: any) {
 }
 
 function HeroVisual() {
+    const [zoom, setZoom] = useState(46);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setZoom(22);
+            } else if (window.innerWidth < 1024) {
+                setZoom(34);
+            } else {
+                setZoom(46);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const extrudeBaseSettings = useMemo(() => ({
         depth: 0.3,
         bevelEnabled: true,
@@ -268,8 +285,8 @@ function HeroVisual() {
     }, []);
 
     return (
-        <div className="relative h-[450px] w-full lg:h-[700px] -ml-4 lg:-ml-12 lg:-mt-12 cursor-grab active:cursor-grabbing">
-            <Canvas orthographic camera={{ zoom: 46, position: [15, 15, 15] }}>
+        <div className="relative h-[300px] md:h-[450px] lg:h-[700px] w-full lg:-ml-12 lg:-mt-12 cursor-grab active:cursor-grabbing">
+            <Canvas orthographic camera={{ zoom: zoom, position: [15, 15, 15] }} key={zoom}>
                 <Environment preset="city" />
                 <ambientLight intensity={0.85} />
                 <directionalLight position={[10, 15, 5]} intensity={2.2} />
@@ -436,9 +453,9 @@ function HeroVisual() {
 
 export default function Hero() {
     return (
-        <section id="top" className="container relative grid items-center gap-10 pb-8 pt-10 lg:grid-cols-[1.1fr_1fr] lg:pt-[40px] z-10 w-full">
+        <section id="hero" className="container relative grid items-center gap-10 pb-8 pt-36 md:pt-40 lg:pt-[90px] lg:grid-cols-[1.1fr_1fr] z-10 w-full">
             <motion.div
-                className="relative z-10 flex flex-col items-end pt-4 text-right"
+                className="relative z-10 flex flex-col items-center lg:items-end pt-4 text-center lg:text-right"
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
@@ -447,17 +464,17 @@ export default function Hero() {
                     FULL STACK DEVELOPER
                 </div>
 
-                <h1 className="font-display text-[clamp(4.5rem,13vw,9.5rem)] font-black leading-[0.82] tracking-[-0.01em] text-white">
+                <h1 className="font-display text-[clamp(3.1rem,9vw,9.5rem)] font-black leading-[0.82] tracking-[-0.01em] text-white">
                     KARTHICK
                 </h1>
 
-                <div className="mt-8 flex w-full max-w-[430px] items-center justify-end gap-6 text-right">
-                    <p className="flex-1 text-[15px] font-bold leading-relaxed text-white/95">
+                <div className="mt-8 flex w-full max-w-[430px] items-center justify-center lg:justify-end gap-6">
+                    <p className="flex-1 text-[15px] font-bold leading-relaxed text-white/95 text-center lg:text-right">
                         Building AI systems, scalable backend architectures, real-time applications, and developer tools.
                     </p>
                 </div>
 
-                <div className="mt-10 flex w-full max-w-[350px] justify-end">
+                <div className="mt-10 flex w-full max-w-[350px] justify-center lg:justify-end">
                     <a href="#projects" className="group relative overflow-hidden inline-flex h-[54px] items-center bg-white rounded-[20px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-transform hover:scale-105">
                         {/* Yellow Left Side */}
                         <div className="h-full w-[44px] bg-[#fbcf42] shrink-0" />
@@ -481,7 +498,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-                className="relative z-0 ml-20"
+                className="relative z-0 ml-20 hidden lg:block"
                 initial={{ opacity: 0, scale: 0.94, rotate: 1 }}
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
