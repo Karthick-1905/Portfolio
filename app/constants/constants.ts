@@ -1,14 +1,14 @@
 export const projects = [
     {
         title: "Scribbl Clone",
-        src: "/assests/scribbl.png",
+        src: "/Portfolio/assests/scribbl.png",
         stack: ["Next.js", "Express", "WebSockets (ws)", "Turborepo"],
         description: "Real-time collaborative drawing and guessing game built using Turborepo monorepo, Next.js frontend and Express backend communicating over raw WebSockets (ws) for low-latency canvas sync and multiplayer game state.",
         github: "https://github.com/Karthick-1905/Squiggle---A-Scribbl-clone"
     },
     {
         title: "LUNA – AI Podcast Editing",
-        src: "/assests/Luna_logo.jpg",
+        src: "/Portfolio/assests/Luna_logo.jpg",
         stack: ["Whisper", "XTTS", "Edge AI", "Speaker Diarization"],
         description: "Fully offline podcast editing app built for the Qualcomm Edge AI Hackathon — edit transcripts and have changes auto-applied to the original audio via local speech-to-text and voice cloning.",
         github: "https://github.com/Karthick-1905/LUNA-QUALCOMM-EDGE-AI"
